@@ -1,0 +1,3 @@
+# O GitHub Pages não publica o guia interno dos agentes como página do site.
+exclude:
+  - CLAUDE.md

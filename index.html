@@ -96,7 +96,30 @@
   .video-card video { border-radius: 16px; width: 100%; aspect-ratio: 9/16; object-fit: cover; background: #000; }
   .video-card h3 { margin: 14px 6px 4px; color: var(--roxo-escuro); font-size: 1.1rem; }
   .video-card p { margin: 0 6px 6px; color: #5C5468; font-size: .95rem; }
-  .video-card .creditos { font-size: .75rem; color: var(--cinza); margin-top: 6px; }
+
+  /* portfólio: antes e depois com controle deslizante */
+  .pf-dica { text-align: center; color: var(--rosa); font-weight: 800; margin: -24px 0 18px; }
+  .pf-lista { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 360px)); gap: 32px; justify-content: center; }
+  .pf-item h3 { margin: 14px 6px 4px; color: var(--roxo-escuro); font-size: 1.1rem; text-align: center; }
+  .pf-item p { margin: 0 6px; color: #5C5468; font-size: .95rem; text-align: center; }
+  .pf-tipo { display: block; width: max-content; margin: 14px auto 0; background: #F3EEF8; color: var(--roxo); font-weight: 800;
+             font-size: .75rem; padding: 4px 10px; border-radius: 999px; }
+  .cmp { position: relative; aspect-ratio: 9 / 16; border-radius: 24px; overflow: hidden; background: #1a1a1a;
+         box-shadow: 0 20px 50px rgba(43, 11, 94, .2); touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: ew-resize; --p: 50%; }
+  .cmp img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+  .cmp .depois { clip-path: inset(0 0 0 var(--p)); }
+  .cmp .linha { position: absolute; top: 0; bottom: 0; left: var(--p); width: 4px; margin-left: -2px; background: #fff; z-index: 2; pointer-events: none; }
+  .cmp .puxador { position: absolute; top: 50%; left: var(--p); transform: translate(-50%, -50%); z-index: 3; width: 52px; height: 52px; border-radius: 50%;
+                  background: var(--rosa); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 1.3rem;
+                  box-shadow: 0 6px 16px rgba(0, 0, 0, .3); pointer-events: none; }
+  .cmp .rotulo { position: absolute; bottom: 14px; z-index: 2; font-weight: 800; font-size: .8rem; padding: 6px 12px; border-radius: 999px; pointer-events: none; }
+  .cmp .r-antes { left: 14px; background: rgba(0, 0, 0, .6); color: #fff; }
+  .cmp .r-depois { right: 14px; background: var(--amarelo); color: var(--roxo-escuro); }
+  .cmp .selo-pf { position: absolute; top: 14px; left: 14px; z-index: 2; background: var(--amarelo); color: var(--roxo-escuro); font-weight: 800;
+                  font-size: .75rem; padding: 5px 10px; border-radius: 999px; box-shadow: 0 4px 10px rgba(0, 0, 0, .2); pointer-events: none; }
+  .cmp input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+  .cmp:has(input:focus-visible) { outline: 3px solid var(--amarelo); outline-offset: 3px; }
+  .pf-cta { margin: 36px auto 0; display: flex; width: max-content; }
 
   /* passos */
   .passos { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; counter-reset: p; }
@@ -190,19 +213,9 @@
         <small>Portfólio</small>
         <h2>Alguns trabalhos nossos</h2>
       </div>
-      <div class="portfolio">
-        <div class="video-card">
-          <img src="assets/portfolio-flores.jpg" alt="Antes e depois: moça triste num banco em dia chuvoso e, depois, recebendo um buquê de flores com o sol aparecendo" loading="lazy" width="768" height="1376">
-          <h3>Antes e depois com flores 💐</h3>
-          <p>Arte para floricultura: do dia cinzento ao momento especial.</p>
-        </div>
-        <div class="video-card">
-          <video src="assets/lua-de-petalas.mp4" poster="assets/lua-de-petalas.jpg" muted loop playsinline controls preload="none" aria-label="Comercial da floricultura fictícia Lua de Pétalas: buquês de flores e a pergunta pra quem você mandaria flores hoje"></video>
-          <h3>Comercial para floricultura 🌙</h3>
-          <p>Reels com narração para a Lua de Pétalas (marca fictícia, criada para o portfólio).</p>
-          <p class="creditos">Imagens: Joaquim Baeta, Sarah Stierch, George Chernilevsky (<a href="https://creativecommons.org/licenses/by/4.0/deed.pt-br" target="_blank" rel="noopener">CC BY 4.0</a>); David Condrey, Gerda Arendt, ZeroEntry (CC0), via Wikimedia Commons.</p>
-        </div>
-      </div>
+      <p class="pf-dica">👆 Arraste para ver a mudança</p>
+      <div class="pf-lista" id="pf-lista"></div>
+      <a class="btn btn-whats pf-cta" href="https://wa.me/5544988069045?text=Ol%C3%A1!%20Vi%20o%20portf%C3%B3lio%20e%20quero%20um%20assim%20%E2%9A%A1" target="_blank" rel="noopener">Quero um assim</a>
     </div>
   </section>
 
@@ -240,6 +253,52 @@
   <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1 1 21 12z"/></svg>
 </a>
 
+<script>
+  /* ================= PORTFÓLIO =================
+     Cada linha é um trabalho. Para incluir um novo: copie uma linha inteira,
+     cole embaixo e troque os textos e os nomes das imagens (que ficam na pasta assets/).
+     selo: deixe "exemplo ilustrativo" enquanto não for cliente real. */
+  const TRABALHOS = [
+    { titulo: "Antes e depois com flores 💐", tipo: "Arte", descricao: "Arte para floricultura: do dia cinzento ao momento especial.", antes: "assets/flores-antes.jpg", depois: "assets/flores-depois.jpg", selo: "exemplo ilustrativo" },
+  ];
+  /* ============================================= */
+
+  (function () {
+    const lista = document.getElementById("pf-lista");
+    if (!lista) return;
+    const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt) e.textContent = txt; return e; };
+    TRABALHOS.forEach(function (t) {
+      const item = el("article", "pf-item");
+      const cmp = el("div", "cmp");
+      const imgA = el("img"); imgA.src = t.antes; imgA.alt = "Antes: " + t.titulo; imgA.loading = "lazy"; imgA.width = 384; imgA.height = 683;
+      const imgD = el("img", "depois"); imgD.src = t.depois; imgD.alt = "Depois: " + t.titulo; imgD.loading = "lazy"; imgD.width = 384; imgD.height = 683;
+      const faixa = el("input"); faixa.type = "range"; faixa.min = 0; faixa.max = 100; faixa.value = 50; faixa.setAttribute("aria-label", "Comparar antes e depois: " + t.titulo);
+      cmp.append(imgA, imgD, el("span", "linha"), el("span", "puxador", "⟷"), el("span", "rotulo r-antes", "ANTES"), el("span", "rotulo r-depois", "DEPOIS"));
+      if (t.selo) cmp.append(el("span", "selo-pf", t.selo));
+      cmp.append(faixa);
+      const mover = (p) => { p = Math.max(0, Math.min(100, p)); cmp.style.setProperty("--p", p + "%"); faixa.value = Math.round(p); };
+      const pelaPosicao = (x) => { const r = cmp.getBoundingClientRect(); mover((x - r.left) / r.width * 100); };
+      let arrastando = false;
+      cmp.addEventListener("pointerdown", (e) => { arrastando = true; cmp.setPointerCapture(e.pointerId); pelaPosicao(e.clientX); });
+      cmp.addEventListener("pointermove", (e) => { if (arrastando) pelaPosicao(e.clientX); });
+      ["pointerup", "pointercancel"].forEach((ev) => cmp.addEventListener(ev, () => { arrastando = false; }));
+      faixa.addEventListener("input", () => mover(+faixa.value));
+      item.append(cmp, el("span", "pf-tipo", t.tipo), el("h3", "", t.titulo), el("p", "", t.descricao));
+      lista.append(item);
+      /* mostra que dá para arrastar: um vaivém suave na primeira vez que aparece na tela */
+      if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const obs = new IntersectionObserver((ents) => {
+          if (!ents[0].isIntersecting) return; obs.disconnect();
+          const ini = performance.now();
+          const passo = (agora) => { const k = Math.min(1, (agora - ini) / 1600); if (arrastando) return;
+            mover(50 + Math.sin(k * Math.PI * 2) * 25); if (k < 1) requestAnimationFrame(passo); };
+          requestAnimationFrame(passo);
+        }, { threshold: .6 });
+        obs.observe(cmp);
+      }
+    });
+  })();
+</script>
 <script>
   try { document.getElementById("ano").textContent = new Date().getFullYear(); } catch (e) {}
 </script>

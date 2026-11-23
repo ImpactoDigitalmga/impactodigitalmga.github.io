@@ -120,6 +120,9 @@
   .cmp input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
   .cmp:has(input:focus-visible) { outline: 3px solid var(--amarelo); outline-offset: 3px; }
   .pf-cta { margin: 36px auto 0; display: flex; width: max-content; }
+  .pf-video { position: relative; aspect-ratio: 9 / 16; border-radius: 24px; overflow: hidden; background: #000; box-shadow: 0 20px 50px rgba(43, 11, 94, .2); }
+  .pf-video video { width: 100%; height: 100%; object-fit: cover; }
+  .pf-item .pf-creditos { font-size: .75rem; color: var(--cinza); margin-top: 8px; }
 
   /* passos */
   .passos { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; counter-reset: p; }
@@ -256,10 +259,12 @@
 <script>
   /* ================= PORTFÓLIO =================
      Cada linha é um trabalho. Para incluir um novo: copie uma linha inteira,
-     cole embaixo e troque os textos e os nomes das imagens (que ficam na pasta assets/).
+     cole embaixo e troque os textos e os nomes dos arquivos (que ficam na pasta assets/).
+     Antes e depois: use "antes" e "depois". Vídeo: use "video" e "capa" (+ "creditos" se tiver imagens de terceiros).
      selo: deixe "exemplo ilustrativo" enquanto não for cliente real. */
   const TRABALHOS = [
     { titulo: "Antes e depois com flores 💐", tipo: "Arte", descricao: "Arte para floricultura: do dia cinzento ao momento especial.", antes: "assets/flores-antes.jpg", depois: "assets/flores-depois.jpg", selo: "exemplo ilustrativo" },
+    { titulo: "Comercial para floricultura 🌙", tipo: "Vídeo · Reels", descricao: "Reels com narração para a Lua de Pétalas (marca fictícia, criada para o portfólio).", video: "assets/lua-de-petalas.mp4", capa: "assets/lua-de-petalas.jpg", creditos: "Imagens: Joaquim Baeta, Sarah Stierch, George Chernilevsky (CC BY 4.0); David Condrey, Gerda Arendt, ZeroEntry (CC0), via Wikimedia Commons." },
   ];
   /* ============================================= */
 
@@ -269,6 +274,17 @@
     const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt) e.textContent = txt; return e; };
     TRABALHOS.forEach(function (t) {
       const item = el("article", "pf-item");
+      if (t.video) {
+        const quadro = el("div", "pf-video");
+        const v = el("video"); v.src = t.video; v.poster = t.capa || ""; v.muted = true; v.loop = true; v.playsInline = true;
+        v.controls = true; v.preload = "none"; v.setAttribute("aria-label", t.titulo);
+        quadro.append(v);
+        if (t.selo) quadro.append(el("span", "selo-pf", t.selo));
+        item.append(quadro, el("span", "pf-tipo", t.tipo), el("h3", "", t.titulo), el("p", "", t.descricao));
+        if (t.creditos) item.append(el("p", "pf-creditos", t.creditos));
+        lista.append(item);
+        return;
+      }
       const cmp = el("div", "cmp");
       const imgA = el("img"); imgA.src = t.antes; imgA.alt = "Antes: " + t.titulo; imgA.loading = "lazy"; imgA.width = 384; imgA.height = 683;
       const imgD = el("img", "depois"); imgD.src = t.depois; imgD.alt = "Depois: " + t.titulo; imgD.loading = "lazy"; imgD.width = 384; imgD.height = 683;
